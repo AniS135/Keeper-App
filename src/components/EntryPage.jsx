@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../authentication/login.css";
 
 
@@ -93,4 +94,13 @@ class EntryPage extends Component {
     }
 }
 
-export default EntryPage;
+export default function (props) {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem("token");
+        if (user) navigate("/");
+    }, [navigate]);
+
+    return <EntryPage {...props} />;
+}
