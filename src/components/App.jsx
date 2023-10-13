@@ -3,6 +3,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
+import LoginWrapper from "./Login";
+
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -22,20 +24,24 @@ function App() {
   }
 
   return (
-    <div>
+
+    <div className="main-container">
+      <LoginWrapper />
       <Header />
       <CreateArea onAdd={addNote} />
-      {notes.map((noteItem, index) => {
-        return (
-          <Note
-            key={index}
-            id={index}
-            title={noteItem.title}
-            content={noteItem.content}
-            onDelete={deleteNote}
-          />
-        );
-      })}
+      <div className="NotesContainer">
+        {notes.map((noteItem, index) => {
+          return (
+            <Note
+              key={index}
+              id={index}
+              title={noteItem.title}
+              content={noteItem.content}
+              onDelete={deleteNote}
+            />
+          );
+        })}
+      </div>
       <Footer />
     </div>
   );
