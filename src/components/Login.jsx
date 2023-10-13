@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../authentication/login.css";
 
+
+
 class EntryPage extends Component {
     constructor(props) {
         super(props);
