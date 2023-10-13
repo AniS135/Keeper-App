@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
 
-function App() {
+function HomePage() {
     const [notes, setNotes] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem("token");
+        if (!user) navigate("/auth");
+    }, [navigate]);
 
     function addNote(newNote) {
         setNotes((prevNotes) => {
@@ -43,4 +50,4 @@ function App() {
     );
 }
 
-export default App;
+export default HomePage;
