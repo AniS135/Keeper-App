@@ -1,196 +1,170 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../authentication/login.css";
-import axios from 'axios';
+import axios from "axios";
+import { useState } from "react";
 
+const EntryPage = () => {
+    const [showLogin, setShowLogin] = useState(true);
+    const loginusername = useRef();
+    const loginpassword = useRef();
+    const signupusername = useRef();
+    const signupemail = useRef();
+    const signuppassword = useRef();
 
-
-class EntryPage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {
-                username : "",
-                password : "",
-                email : ""
-            },
-            currentView: "logIn",
-        };
-    }
-
-    changeView = (view) => {
-        this.setState({
-            currentView: view,
-        });
-    };
-
-    onChangeHandler = (event) => {
-
-        const { name, value } = event.target;
-
-        this.setState((prevState) => {
-            return {
-                ...prevState,
-                user: {
-                    ...this.state.user,
-                    [name]: value
-                }
-            }
-        });
-    }
-
-    register = (e) => {
-
-        e.preventDefault();
-
-        axios.post("http://localhost:8080/notes/v1/user/register", this.state.user)
-        .then(response => {
-            console.log(response.data);
-            localStorage.setItem('jwtToken', response.data.access_token);
-            this.redirector();
-        }).catch(error => {
-            console.error(error);
-            localStorage.removeItem('jwtToken');
-        });
-
-    }
-
-    login = (e) => {
-
-        e.preventDefault();
-
-        axios.post("http://localhost:8080/notes/v1/user/login", {
-            username : this.state.user.username,
-            password : this.state.user.password
-        })
-        .then(response => {
-            console.log(response.data);
-            localStorage.setItem('jwtToken', response.data.access_token);
-            this.redirector();
-        }).catch(error => {
-            console.error(error);
-            localStorage.removeItem('jwtToken');
-        });
-
-    }
-
-    redirector = () => {
-        this.props.history.push("/");
-    }
-
-    currentView = () => {
-        switch (this.state.currentView) {
-            case "signUp":
-                return (
-                    <form>
-                        <h2>Sign Up!</h2>
-                        <fieldset>
-                            <legend>Create Account</legend>
-                            <ul>
-                                <li>
-                                    <label htmlFor="username">Username:</label>
-                                    <input type="text" name="username" id="username" value={this.state.user.username} onChange={(e) => {
-                                        this.onChangeHandler(e)
-                                    }} required />
-                                </li>
-                                <li>
-                                    <label htmlFor="email">Email:</label>
-                                    <input type="email" name="email" id="email" value={this.state.user.email} onChange={(e) => {
-                                        this.onChangeHandler(e)
-                                    }} required />
-                                </li>
-                                <li>
-                                    <label htmlFor="password">Password:</label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        id="password"
-                                        value={this.state.user.password}
-                                        onChange={(e) => {
-                                            this.onChangeHandler(e)
-                                        }}
-                                        required
-                                    />
-                                </li>
-                            </ul>
-                        </fieldset>
-                        <button onClick={(e) => this.register(e)}>Submit</button>
-                        <button
-                            type="button"
-                            onClick={() => this.changeView("logIn")}
-                        >
-                            Have an Account?
-                        </button>
-                    </form>
-                );
-            case "logIn":
-                return (
-                    <form>
-                        <h2>Welcome Back!</h2>
-                        <fieldset>
-                            <legend>Log In</legend>
-                            <ul>
-                                <li>
-                                    <label htmlFor="username">Username:</label>
-                                    <input type="text" name="username" id="username" value={this.state.user.username} onChange={(e) => {
-                                        this.onChangeHandler(e)
-                                    }} required />
-                                </li>
-                                <li>
-                                    <label htmlFor="password">Password:</label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        id="password"
-                                        value={this.state.user.password}
-                                        onChange={(e) => {
-                                            this.onChangeHandler(e)
-                                        }}
-                                        required
-                                    />
-                                </li>
-                            </ul>
-                        </fieldset>
-                        <button onClick={(e) => this.login(e)}>Login</button>
-                        <button
-                            type="button"
-                            onClick={() => this.changeView("signUp")}
-                        >
-                            Create an Account
-                        </button>
-                    </form>
-                );
-            default:
-                break;
-        }
-    };
-
-    render() {
-        return <section id="entry-page">{this.currentView()}</section>;
-    }
-}
-
-export default function (props) {
     const navigate = useNavigate();
+
+    const changeView = (fuck) => {
+        setShowLogin(fuck);
+    };
+
+    const login = (e) => {
+        e.preventDefault();
+
+        axios
+            .post("http://localhost:8080/notes/v1/user/login", {
+                username: loginusername.current.value,
+                password: loginpassword.current.value,
+            })
+            .then((response) => {
+                console.log(response.data);
+                localStorage.setItem("jwtToken", response.data.access_token);
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error(error);
+                localStorage.removeItem("jwtToken");
+            });
+    };
+
+    const register = (e) => {
+        e.preventDefault();
+        const user = {
+            username: signupusername.current.value,
+            email: signupemail.current.value,
+            password: signuppassword.current.value,
+        };
+
+        axios
+            .post("http://localhost:8080/notes/v1/user/register", user)
+            .then((response) => {
+                console.log(response.data);
+                localStorage.setItem("jwtToken", response.data.access_token);
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error(error);
+                localStorage.removeItem("jwtToken");
+            });
+    };
+
+    const Login = () => {
+        return (
+            <form>
+                <h2>Welcome Back!</h2>
+                <fieldset>
+                    <legend>Log In</legend>
+                    <ul>
+                        <li>
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                ref={loginusername}
+                                required
+                            />
+                        </li>
+                        <li>
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                ref={loginpassword}
+                                required
+                            />
+                        </li>
+                    </ul>
+                </fieldset>
+                <button onClick={(e) => login(e)}>Login</button>
+                <button type="button" onClick={() => changeView(false)}>
+                    Create an Account
+                </button>
+            </form>
+        );
+    };
+
+    const SignUp = () => {
+        return (
+            <form>
+                <h2>Sign Up!</h2>
+                <fieldset>
+                    <legend>Create Account</legend>
+                    <ul>
+                        <li>
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                ref={signupusername}
+                                required
+                            />
+                        </li>
+                        <li>
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                ref={signupemail}
+                                required
+                            />
+                        </li>
+                        <li>
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                ref={signuppassword}
+                                required
+                            />
+                        </li>
+                    </ul>
+                </fieldset>
+                <button onClick={(e) => register(e)}>Submit</button>
+                <button type="button" onClick={() => changeView(true)}>
+                    Have an Account?
+                </button>
+            </form>
+        );
+    };
 
     useEffect(() => {
         const jwtToken = localStorage.getItem("jwtToken");
         if (jwtToken) {
-            axios.get("http://localhost:8080/notes/v1/notes/get-all-notes", {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`
-                }
-            }).then(response => {
-                navigate("/");
-            }).catch(error => {
-                // console.error(error);
-                localStorage.removeItem("jwtToken");
-                // navigate("/auth");
-            });
+            axios
+                .get("http://localhost:8080/notes/v1/notes/get-all-notes", {
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`,
+                    },
+                })
+                .then((response) => {
+                    navigate("/");
+                })
+                .catch((error) => {
+                    // console.error(error);
+                    localStorage.removeItem("jwtToken");
+                    // navigate("/auth");
+                });
         }
     }, [navigate]);
 
-    return <EntryPage {...props} />;
-}
+    return (
+        <section id="entry-page">{showLogin ? <Login /> : <SignUp />}</section>
+    );
+};
 
-// export default withRouter(EntryPage);
+export default EntryPage;
