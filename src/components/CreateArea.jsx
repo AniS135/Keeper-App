@@ -7,7 +7,7 @@ function CreateArea(props) {
   const [zoomIn, setZoomIn] =useState(false);
   const [note, setNote] = useState({
     title: "",
-    content: ""
+    body: ""
   });
 
 
@@ -20,6 +20,7 @@ function CreateArea(props) {
 
   function handleChange(event) {
     const { name, value } = event.target;
+    console.log(name, value);
 
     setNote(prevNote => {
       return {
@@ -33,7 +34,7 @@ function CreateArea(props) {
     props.onAdd(note);
     setNote({
       title: "",
-      content: ""
+      body: ""
     });
     event.preventDefault();
   }
@@ -50,10 +51,10 @@ function CreateArea(props) {
         />
         : null}
         <textarea
-          name="content"
+          name="body"
           onClick={handleZoomInTrue}
           onChange={handleChange}
-          value={note.content}
+          value={note.body}
           placeholder="Take a note..."
           rows={zoomIn?"3":"1"}
         />

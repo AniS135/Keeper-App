@@ -4,27 +4,75 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
+import axios from "axios";
 
 function HomePage() {
     const [notes, setNotes] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = localStorage.getItem("token");
-        if (!user) navigate("/auth");
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+            navigate("/auth");
+        }
+        else {
+            axios.get("http://localhost:8080/notes/v1/notes/get-all-notes", {
+                headers : {
+                    Authorization : `Bearer ${jwtToken}`
+                }
+            }).then(response => {
+                console.log(response.data);
+                setNotes(response.data);
+            }).catch(error => {
+                // console.error(error);
+                localStorage.removeItem("jwtToken");
+                navigate("/auth");
+            });
+        }
     }, [navigate]);
 
     function addNote(newNote) {
-        setNotes((prevNotes) => {
-            return [...prevNotes, newNote];
+
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        axios.post("http://localhost:8080/notes/v1/notes/create-note", newNote,{
+            headers : {
+                Authorization : `Bearer ${jwtToken}`
+            }
+        }).then(response => {
+            console.log(response.data);
+            if(response.status === 200)
+            {
+                setNotes((prevNotes) => {
+                    return [...prevNotes, response.data];
+                });
+            } 
+        }).catch(error => {
+            console.error(error);
         });
+
     }
 
     function deleteNote(id) {
-        setNotes((prevNotes) => {
-            return prevNotes.filter((noteItem, index) => {
-                return index !== id;
-            });
+
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        axios.delete(`http://localhost:8080/notes/v1/notes/delete-note/${id}`, {
+            headers : {
+                Authorization : `Bearer ${jwtToken}`
+            }
+        }).then(response => {
+            console.log(response.data);
+            if(response.status === 200)
+            {
+                setNotes((prevNotes) => {
+                    return prevNotes.filter((noteItem) => {
+                        return noteItem.id !== id;
+                    });
+                });
+            } 
+        }).catch(error => {
+            console.error(error);
         });
     }
 
@@ -33,13 +81,13 @@ function HomePage() {
             <Header />
             <CreateArea onAdd={addNote} />
             <div className="NotesContainer">
-                {notes.map((noteItem, index) => {
+                {notes.map((noteItem) => {
                     return (
                         <Note
-                            key={index}
-                            id={index}
+                            key={noteItem.id}
+                            id={noteItem.id}
                             title={noteItem.title}
-                            content={noteItem.content}
+                            content={noteItem.body}
                             onDelete={deleteNote}
                         />
                     );
