@@ -1,14 +1,18 @@
 import React from "react";
 import HighlightIcon from '@mui/icons-material/Highlight';
+import { Button, Flex, Spacer, Text } from "@chakra-ui/react";
 
 function Header() {
   return (
-    <header>
+    <Flex as={"nav"} alignItems={"center"} justifyContent={"flex-start"} gap={"1rem"}>
+      <HighlightIcon/>
       <h1>
-      <HighlightIcon />
-      Keeper
+        Keeper
       </h1>
-    </header>
+      <Spacer />
+      <Text>{localStorage.getItem('username') || "Guest"}</Text>
+      <Button varient = "ghost"> Logout </Button>
+    </Flex>
   );
 }
 

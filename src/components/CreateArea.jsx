@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 // import { Fab } from "@material-ui/core";
+import { ThemeProvider , createTheme} from '@mui/material/styles';
 import { Fab } from "@mui/material";
 import Zoom from '@mui/material/Zoom';
 
@@ -10,6 +11,8 @@ function CreateArea(props) {
     title: "",
     body: ""
   });
+
+  const theme = createTheme();
 
 
   function handleZoomInTrue(){
@@ -59,11 +62,14 @@ function CreateArea(props) {
           placeholder="Take a note..."
           rows={zoomIn?"3":"1"}
         />
-        {/* <Zoom in={zoomIn}> */}
-          <Fab onClick={submitNote} >
-            <AddIcon />
-          </Fab>
-        {/* </Zoom> */}
+        
+        <ThemeProvider theme={theme}>
+          <Zoom in={zoomIn}>
+            <Fab onClick={submitNote} >
+              <AddIcon />
+            </Fab>
+          </Zoom>
+        </ThemeProvider>
         
       </form>
     </div>

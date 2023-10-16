@@ -33,15 +33,22 @@ const EntryPage = () => {
                 localStorage.setItem("jwtToken", response.data.access_token);
                 navigate("/");
                 toast({
-                    title: 'Login Successful.',
-                    description: response.data.message,
+                    title: response.data.message,
                     status: 'success',
-                    duration: 5000,
+                    duration: 3000,
                     isClosable: true,
+                    position: "top-right"
                 });
             })
             .catch((error) => {
                 console.error(error);
+                toast({
+                    title: 'Invalid username or password',
+                    status: 'warning',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'top-right'
+                });
                 localStorage.removeItem("jwtToken");
             });
     };

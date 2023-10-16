@@ -12,17 +12,21 @@ body {
   padding: 0 16px;
 }
 
-header {
+nav {
   background-color: #f5ba13;
   margin: auto -16px;
   padding: 16px 32px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 }
 
-header h1 {
+nav h1 {
   color: #fff;
   font-family: "McLaren", cursive;
-  font-weight: 200;
+  font-size: 1.3rem;
+}
+
+nav svg {
+  fill: white !important;
 }
 
 footer {
